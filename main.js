@@ -6,7 +6,31 @@ const character = {
     defaultHP: 100,
     damageHP: 100,
     elHP: document.getElementById('health-character'),
-    elProgressbar: document.getElementById('progressbar-character')
+    elProgressbar: document.getElementById('progressbar-character'),
+
+    renderHP() {
+        this.renderHPLife();
+        this.renderProgressbarHP();
+    },
+
+    renderHPLife() {
+        this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
+    },
+
+    renderProgressbarHP() {
+        this.elProgressbar.style.width = this.damageHP + '%';
+        this.elProgressbar.style.backgroundColor = this.damageHP > 50 ? 'green' : this.damageHP > 20 ? 'orange' : 'red';
+    },
+
+    changeHP(count) {
+        if (this.damageHP < count) {
+            this.damageHP = 0;
+            alert(this.name + ' is defeated!');
+        } else {
+            this.damageHP -= count;
+        }
+        this.renderHP();
+    }
 };
 
 const enemy1 = {
@@ -14,7 +38,12 @@ const enemy1 = {
     defaultHP: 100,
     damageHP: 100,
     elHP: document.getElementById('health-enemy'),
-    elProgressbar: document.getElementById('progressbar-enemy')
+    elProgressbar: document.getElementById('progressbar-enemy'),
+
+    renderHP: character.renderHP,
+    renderHPLife: character.renderHPLife,
+    renderProgressbarHP: character.renderProgressbarHP,
+    changeHP: character.changeHP
 };
 
 const enemy2 = {
@@ -22,52 +51,31 @@ const enemy2 = {
     defaultHP: 100,
     damageHP: 100,
     elHP: document.getElementById('health-enemy2'),
-    elProgressbar: document.getElementById('progressbar-enemy2')
+    elProgressbar: document.getElementById('progressbar-enemy2'),
+
+    renderHP: character.renderHP,
+    renderHPLife: character.renderHPLife,
+    renderProgressbarHP: character.renderProgressbarHP,
+    changeHP: character.changeHP
 };
 
 $btnKick.addEventListener('click', function () {
     console.log('Thunder Jolt');
-    changeHP(random(15), character);
-    changeHP(random(20), enemy1);
-    changeHP(random(20), enemy2);
+    enemy1.changeHP(random(15));
+    enemy2.changeHP(random(20));
 });
 
 $btnMegaPunch.addEventListener('click', function () {
     console.log('Mega Punch');
-    changeHP(random(35), character);
-    changeHP(random(40), enemy1);
-    changeHP(random(40), enemy2);
+    enemy1.changeHP(random(35));
+    enemy2.changeHP(random(40));
 });
 
 function init() {
     console.log('Start Game!');
-    renderHP(character);
-    renderHP(enemy1);
-    renderHP(enemy2);
-}
-
-function renderHP(person) {
-    renderHPLife(person);
-    renderProgressbarHP(person);
-}
-
-function renderHPLife(person) {
-    person.elHP.innerText = person.damageHP + ' / ' + person.defaultHP;
-}
-
-function renderProgressbarHP(person) {
-    person.elProgressbar.style.width = person.damageHP + '%';
-    person.elProgressbar.style.backgroundColor = person.damageHP > 50 ? 'green' : person.damageHP > 20 ? 'orange' : 'red';
-}
-
-function changeHP(count, person) {
-    if (person.damageHP < count) {
-        person.damageHP = 0;
-        alert(person.name + ' is defeated!');
-    } else {
-        person.damageHP -= count;
-    }
-    renderHP(person);
+    character.renderHP();
+    enemy1.renderHP();
+    enemy2.renderHP();
 }
 
 function random(num) {
@@ -75,3 +83,4 @@ function random(num) {
 }
 
 init();
+
